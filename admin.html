@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Aether Homes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .admin-page { padding-top: 100px; min-height: 100vh; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .admin-title { font-family: var(--font-serif); font-size: 2rem; }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
+    @media (max-width: 900px) { .admin-grid { grid-template-columns: 1fr; } }
+    .admin-form, .admin-list {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px;
+    }
+    .admin-form h3, .admin-list h3 { font-size: 1.2rem; margin-bottom: 20px; }
+    .admin-list-item {
+      display: flex; gap: 16px; align-items: center; padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-list-item:last-child { border-bottom: none; }
+    .admin-list-item img { width: 70px; height: 50px; object-fit: cover; border-radius: 6px; }
+    .admin-list-info { flex: 1; }
+    .admin-list-info strong { display: block; margin-bottom: 2px; }
+    .admin-list-info span { font-size: 0.85rem; color: var(--text-muted); }
+    .admin-actions { display: flex; gap: 8px; }
+    .btn-sm {
+      padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; border: none;
+    }
+    .btn-edit { background: var(--accent-soft); color: var(--accent); }
+    .btn-delete { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .btn-sm:hover { opacity: 0.85; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .features-input { min-height: 80px; }
+    .admin-note { font-size: 0.85rem; color: var(--text-muted); margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <header class="header scrolled" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">A</span>
+        <span class="logo-text">Aether Homes</span>
+      </a>
+      <a href="index.html" class="btn btn-outline" style="padding:10px 20px;font-size:0.9rem;">← Ба сайт</a>
+    </div>
+  </header>
+
+  <main class="admin-page">
+    <div class="container">
+      <div class="admin-header">
+        <h1 class="admin-title">Панели идоракунӣ</h1>
+        <button class="btn btn-primary" id="resetData">Бозсозии маълумотҳои аслӣ</button>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-form">
+          <h3 id="formTitle">Иловаи хонаи нав</h3>
+          <form id="houseForm">
+            <input type="hidden" id="editId">
+            <div class="form-group">
+              <label>Номи хона</label>
+              <input type="text" id="title" required placeholder="Масалан Villa Aurora">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Категория</label>
+                <select id="category">
+                  <option value="modern">Муосир</option>
+                  <option value="classic">Классикӣ</option>
+                  <option value="minimal">Минималистӣ</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Намуд</label>
+                <select id="type">
+                  <option value="project">Лоиҳа</option>
+                  <option value="built">Сохташуда</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>URL-и акс</label>
+              <input type="url" id="image" required placeholder="https://...">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Масоҳат (м²)</label>
+                <input type="number" id="area" required min="30">
+              </div>
+              <div class="form-group">
+                <label>Ҳуҷраҳо</label>
+                <input type="number" id="rooms" required min="1">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Ошёнаҳо</label>
+                <input type="number" id="floors" required min="1" max="5" value="1">
+              </div>
+              <div class="form-group">
+                <label>Нарх ($)</label>
+                <input type="number" id="price" required min="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Тавсиф</label>
+              <textarea id="description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>Имкониятҳо (ҳар сатр якто)</label>
+              <textarea id="features" class="features-input" rows="4" placeholder="Гараж&#10;Ҳавз&#10;Системаи оқилона"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="submitBtn">Илова кардан</button>
+            <button type="button" class="btn btn-outline btn-full" id="cancelEdit" style="margin-top:10px;display:none;">Бекор кардан</button>
+          </form>
+          <p class="admin-note">Маълумотҳо дар браузери шумо (localStorage) нигоҳ дошта мешаванд.</p>
+        </div>
+
+        <div class="admin-list">
+          <h3>Рӯйхати хонаҳо (<span id="houseCount">0</span>)</h3>
+          <div id="housesList"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
